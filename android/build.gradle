@@ -2,7 +2,8 @@ group 'com.nankai.flutter_nearby_connections'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '1.8.21'
+
     repositories {
         google()
         jcenter()
@@ -38,6 +39,10 @@ android {
     }
     lintOptions {
         disable 'InvalidPackage'
+    }
+
+     kotlinOptions {
+        jvmTarget = "1.8"  
     }
 }
 
