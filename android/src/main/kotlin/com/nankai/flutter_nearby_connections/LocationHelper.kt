@@ -82,8 +82,13 @@ class LocationHelper(private val activity: Activity) : PluginRegistry.ActivityRe
     }
 
     private fun requestLocationEnable() {
+        if (mLocationSettingsRequest == null) {
+            initiateLocationServiceRequest() // Ensure it's initialized
+        }
+
         val task = LocationServices.getSettingsClient(activity)
-                .checkLocationSettings(mLocationSettingsRequest)
+            .checkLocationSettings(mLocationSettingsRequest!!) // Force unwrap safely
+
         task.addOnCompleteListener { t ->
             try {
                 t.getResult(ApiException::class.java)
@@ -96,7 +101,7 @@ class LocationHelper(private val activity: Activity) : PluginRegistry.ActivityRe
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
                         val resolvableApiException = ex as ResolvableApiException
                         resolvableApiException
-                                .startResolutionForResult(activity, LOCATION_ENABLE_REQUEST)
+                            .startResolutionForResult(activity, LOCATION_ENABLE_REQUEST)
                     } catch (e: IntentSender.SendIntentException) {
                         result?.error("LOCATION_SERVICE_ERROR", e.message, null)
                     }
@@ -107,4 +112,5 @@ class LocationHelper(private val activity: Activity) : PluginRegistry.ActivityRe
             }
         }
     }
+
 }
